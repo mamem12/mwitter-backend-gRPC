@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package v1.mweets;
+
+option go_package = "./";
+
+import "google/api/annotations.proto";
+
+service mweets {
+    rpc CreateMweet(CreateMweetRequest) returns (MweetResponse){
+        option (google.api.http) = {
+            post: "/v1/mweets"
+            body: "*"
+        };
+    }
+    
+    rpc GetAllMweeter(ListMweetsRequest) returns (stream Mweet){
+        option (google.api.http) = {
+            get: "/v1/mweets"
+        };
+    }
+
+    rpc UpdateMweet(UpdateMweetRequest) returns (MweetResponse){
+        option (google.api.http) = {
+            put : "/v1/mweets/{ID}"
+            body : "*"
+        };
+    }
+    
+    rpc DeleteMweet(DeleteMweetRequest) returns (DeleteMweetResponse){
+        option (google.api.http) = {
+            delete : "/v1/mweets/{ID}"
+        };
+    }
+}
+
+message MweetErrorMessage {
+    string code = 1;
+    string msg = 2;
+}
+
+message Mweet {
+    optional string ID = 1;
+    optional string Image = 2;
+    optional string Content = 3;
+    optional string UserId = 4;
+}
+
+message MweetResponse {
+    Mweet mweet = 1;
+}
+
+message ListMweetsRequest{
+}
+
+message CreateMweetRequest {
+    string ID = 1;
+    string Image = 2;
+    string Content = 3;
+    string UserId = 4;
+}
+
+message UpdateMweetRequest{
+    string ID = 1;
+    optional string Content = 2;
+    optional string Image = 3;
+    string UserId = 4;
+}
+
+message DeleteMweetRequest{
+    string ID = 1;
+}
+
+message DeleteMweetResponse {
+    bool success = 1;
+}
+
+// protoc -I ./proto \
+//     --plugin=protoc-gen-grpc-gateway=/Users/ljm/go/bin/protoc-gen-grpc-gateway  \
+//     --go_out ./proto --go_opt paths=source_relative \
+//     --go-grpc_out ./proto --go-grpc_opt paths=source_relative \
+//     --grpc-gateway_out= ./proto --grpc-gateway_opt paths=source_relative  \
+//     ./proto/v1/mweets/mweets.proto

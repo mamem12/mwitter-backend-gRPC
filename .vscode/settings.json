@@ -1,0 +1,10 @@
+{
+    "protoc": {
+        
+        "options": [
+            "--proto_path=${workspaceRoot}/protos/v1/mweets",
+            "--go_out=${workspaceRoot}/protos/v1/mweets"
+        ],
+        
+    }
+}
