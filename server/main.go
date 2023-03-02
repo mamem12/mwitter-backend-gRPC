@@ -12,7 +12,9 @@ import (
 const portNumber = "9001"
 
 func main() {
+
 	lis, err := net.Listen("tcp", ":"+portNumber)
+
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -28,7 +30,10 @@ func main() {
 	pb.RegisterMweetsServer(grpcServer, routes)
 
 	log.Printf("start gRPC server on %s port", portNumber)
-	if err := grpcServer.Serve(lis); err != nil {
+
+	err = grpcServer.Serve(lis)
+
+	if err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
 }

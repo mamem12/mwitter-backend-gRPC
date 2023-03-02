@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	pb "github.com/mwitter-backend-gRPC/proto/v1/mweets"
@@ -21,7 +22,11 @@ func main() {
 	// HTTP 요청이 오면 그 요청을 gRPC server에 보내기 전 처리 용(미들웨어)
 	mux := runtime.NewServeMux()
 
-	// runtime.ServeMuxOption
+	host := os.Getenv("HOST")
+	if host == "" {
+		host = "localhost"
+	}
+	log.Printf("hostIs :: %s", host)
 
 	options := []grpc.DialOption{
 		grpc.WithInsecure(),
@@ -30,7 +35,7 @@ func main() {
 	err := pb.RegisterMweetsHandlerFromEndpoint(
 		ctx,
 		mux,
-		"localhost:"+gRPCServerPortNumber,
+		host+":"+gRPCServerPortNumber,
 		options,
 	)
 	if err != nil {
